@@ -9,9 +9,9 @@ def get_config():
     parser.add_argument('--selected_classes', nargs='+')
     parser.add_argument('--data_path', type=str)
     parser.add_argument('--o2c_pose', default=True, action='store_true')
-    parser.add_argument('--batch_size', type=int, default=192)
-    parser.add_argument('--max_batch_size', type=int, default=192)
-    parser.add_argument('--mini_bs', type=int, default=192)
+    parser.add_argument('--batch_size', type=int, default=64)  # 原先192，现在改为16
+    parser.add_argument('--max_batch_size', type=int, default=64)  # 原先192，现在改为16
+    parser.add_argument('--mini_bs', type=int, default=64) # 原先192，现在改为16
     parser.add_argument('--pose_mode', type=str, default='rot_matrix')
     parser.add_argument('--seed', type=int, default=0)
     parser.add_argument('--percentage_data_for_train', type=float, default=1.0) 
@@ -23,7 +23,7 @@ def get_config():
     parser.add_argument('--device', type=str, default='cuda')
     parser.add_argument('--num_points', type=int, default=1024)
     parser.add_argument('--per_obj', type=str, default='')
-    parser.add_argument('--num_workers', type=int, default=32)
+    parser.add_argument('--num_workers', type=int, default=4) # 从32修改为0
     
     
     """ model """

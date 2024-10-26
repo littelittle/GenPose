@@ -1,6 +1,41 @@
 import numpy as np
 import cv2
 
+def apply_transformation(vertices, transformation_matrix):
+    num_vertices = vertices.shape[0]
+    homogenous_vertices = np.hstack([vertices, np.ones((num_vertices, 1))])
+    transformed_vertices = homogenous_vertices.dot(transformation_matrix.T)
+    return transformed_vertices[:, :3]
+
+def load_obj(path_to_file):
+    """ Load obj file.
+
+    Args:
+        path_to_file: path
+
+    Returns:
+        vertices: ndarray
+        faces: ndarray, index of triangle vertices
+
+    """
+    vertices = []
+    faces = []
+    with open(path_to_file, 'r') as f:
+        for line in f:
+            if line[:2] == 'v ':
+                vertex = line[2:].strip().split(' ')
+                vertex = [float(xyz) for xyz in vertex]
+                vertices.append(vertex)
+            elif line[0] == 'f':
+                face = line[1:].replace('//', '/').strip().split(' ')
+                face = [int(idx.split('/')[0])-1 for idx in face]
+                faces.append(face)
+            else:
+                continue
+    vertices = np.asarray(vertices)
+    faces = np.asarray(faces)
+    return vertices, faces
+
 def get_2d_coord_np(width, height, low=0, high=1, fmt="CHW"):
     """
     Args:

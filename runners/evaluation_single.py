@@ -363,6 +363,7 @@ def inference_pose(data_path, inference_res_dir, pose_mode, record_process=False
     
     ''' Load data '''
     detect_result, categorized_test_data = unpack_data(data_path)
+    # set_trace()
 
     ''' create video dir '''
     video_path = {}
@@ -403,7 +404,8 @@ def inference_pose(data_path, inference_res_dir, pose_mode, record_process=False
             batch_sample['pts_center'] = zero_mean
             ''' Predict poses '''
             video_save_path = f'{video_path[key]}/batch_{str(i)}'
-            pred_RTs, pred_pose = pred_pose_batch(score_agent, batch_sample, video_save_path, pose_mode, record_process)     
+            pred_RTs, pred_pose = pred_pose_batch(score_agent, batch_sample, video_save_path, pose_mode, record_process) 
+            # set_trace()    
             ''' Record results '''
             if record_process:
                 categorized_test_data[key]['pred_pose'] += [pred_pose[0].cpu().numpy()[i] for i in range(pred_pose[0].shape[0])]

@@ -1,4 +1,4 @@
-CUDA_VISIBLE_DEVICES=0 python runners/trainer.py \
+CUDA_VISIBLE_DEVICES=2 python runners/trainer.py \
 --data_path NOCS_DATASET_PATH \
 --log_dir ScoreNet \
 --agent_type score \

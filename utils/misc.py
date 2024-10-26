@@ -10,6 +10,14 @@ os.sys.path.append('..')
 from utils.genpose_utils import get_pose_dim
 from scipy.spatial.transform import Rotation as R
 
+def pc_normalize(pc):
+    """ pc: NxC, return NxC """
+    l = pc.shape[0]
+    centroid = np.mean(pc, axis=0)
+    pc = pc - centroid
+    scale = np.max(np.sqrt(np.sum(pc ** 2, axis=1)))
+    pc = pc / scale
+    return pc, centroid, scale
 
 def parallel_setup(rank, world_size, seed):
     os.environ['MASTER_ADDR'] = 'localhost'

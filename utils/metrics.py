@@ -101,8 +101,10 @@ def compute_RT_errors(RT_1, RT_2, class_id, handle_visibility, synset_names):
     R2 = RT_2[:3, :3] / np.cbrt(np.linalg.det(RT_2[:3, :3]))
     T2 = RT_2[:3, 3]
     # symmetric when rotating around y-axis
-    if synset_names[class_id] in ['bottle', 'can', 'bowl'] or \
-        (synset_names[class_id] == 'mug' and handle_visibility == 0):
+    # TODO: add the symmetric case
+    Done = False
+    if Done and synset_names[class_id] in ['bottle', 'can', 'bowl'] or \
+        (synset_names[class_id] == 'mug' and handle_visibility == 0) :
         y = np.array([0, 1, 0])
         y1 = R1 @ y
         y2 = R2 @ y

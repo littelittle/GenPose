@@ -16,6 +16,7 @@ from tqdm import tqdm
 
 # from datasets.datasets_nocs import get_data_loaders_from_cfg, process_batch
 from datasets.datasets_genpose import get_data_loaders_from_cfg, process_batch
+# from datasets.datasets_shapenet import dataset_shapenet
 from networks.posenet_agent import PoseNet 
 from configs.config import get_config
 from utils.misc import exists_or_mkdir

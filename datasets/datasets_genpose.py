@@ -19,6 +19,7 @@ from utils.datasets_utils import aug_bbox_DZI, get_2d_coord_np, crop_resize_by_w
 from utils.sgpa_utils import load_depth, get_bbox
 from configs.config import get_config
 from utils.misc import get_rot_matrix
+from datasets.datasets_shapenet import ShapeNetDataSet
 
     
 class MultiEpochsDataLoader(torch.utils.data.DataLoader):
@@ -357,6 +358,7 @@ class NOCSDataSet(data.Dataset):
         data_dict['nocs_scale'] = torch.as_tensor(nocs_scale, dtype=torch.float32).contiguous()
         data_dict['handle_visibility'] = torch.as_tensor(int(mug_handle), dtype=torch.int8).contiguous()
         data_dict['path'] = img_path
+        # import ipdb; ipdb.set_trace()
         return data_dict
 
 
@@ -524,7 +526,7 @@ def get_data_loaders(
     random.seed(seed)
     np.random.seed(seed)
 
-    dataset = NOCSDataSet(
+    dataset = ShapeNetDataSet(     # NOTE: 更改为ShapeNetDataSet
         dynamic_zoom_in_params=dynamic_zoom_in_params,
         deform_2d_params=deform_2d_params,
         source=source,
@@ -542,7 +544,8 @@ def get_data_loaders(
         shuffle = False
         num_workers = 1
 
-    if source == 'CAMERA+Real' and mode == 'train':
+    # TODO： 这里的source需要修改！！！
+    if source == 'CAMERA+Real-remove' and mode == 'train':
         # CAMERA : Real = 3 : 1
         camera_len = dataset.subset_len[0]
         real_len = dataset.subset_len[1]
@@ -580,7 +583,7 @@ def get_data_loaders(
             drop_last=False,
             pin_memory=True,
         )
-        
+    # set_trace()
     return dataloader
 
 
@@ -601,6 +604,7 @@ def get_data_loaders_from_cfg(cfg, data_type=['train', 'val', 'test']):
             per_obj=cfg.per_obj,
             num_workers=cfg.num_workers,
         )
+        # set_trace()
         data_loaders['train_loader'] = train_loader
         
     if 'val' in data_type:
@@ -636,7 +640,7 @@ def get_data_loaders_from_cfg(cfg, data_type=['train', 'val', 'test']):
             num_workers=cfg.num_workers,
         )
         data_loaders['test_loader'] = test_loader
-        
+    # set_trace()   
     return data_loaders
 
 
@@ -648,6 +652,7 @@ def process_batch(batch_sample,
     
     assert pose_mode in ['quat_wxyz', 'quat_xyzw', 'euler_xyz', 'euler_xyz_sx_cx', 'rot_matrix'], \
         f"the rotation mode {pose_mode} is not supported!"
+    PTS_AUG_PARAMS = None # 不进行数据增强,也就是始终执行if条件语句
     if PTS_AUG_PARAMS==None:
         PC_da = batch_sample['pcl_in'].to(device)
         gt_R_da = batch_sample['rotation'].to(device)
@@ -725,6 +730,7 @@ if __name__ == '__main__':
     train_loader = data_loaders['train_loader']
     val_loader = data_loaders['val_loader']
     test_loader = data_loaders['test_loader']
+    # set_trace()
     for index, batch_sample in enumerate(tqdm(test_loader)):
         batch_sample = process_batch(
             batch_sample = batch_sample, 
@@ -732,6 +738,7 @@ if __name__ == '__main__':
             pose_mode=cfg.pose_mode,
             PTS_AUG_PARAMS=cfg.PTS_AUG_PARAMS
         )
+        # set_trace()
     for index, batch_sample in enumerate(tqdm(val_loader)):
         batch_sample = process_batch(
             batch_sample = batch_sample, 
